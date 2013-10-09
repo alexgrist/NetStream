@@ -37,6 +37,27 @@ end;
 netstream = {};
 netstream.stored = {};
 
+-- A function to split data for a data stream.
+local function split(data)
+	local index = 1;
+	local result = {};
+	local buffer = {};
+
+	for i = 0, string.len(data) do
+		buffer[#buffer + 1] = string.sub(data, i, i);
+				
+		if (#buffer == 32768) then
+			result[#result + 1] = table.concat(buffer);
+				index = index + 1;
+			buffer = {};
+		end;
+	end;
+			
+	result[#result + 1] = table.concat(buffer);
+	
+	return result;
+end;
+
 -- A function to hook a data stream.
 function netstream.Hook(name, Callback)
 	netstream.stored[name] = Callback;
@@ -143,7 +164,6 @@ else
 		
 		if (NS_DS_NAME and NS_DS_DATA and NS_DS_LENGTH) then
 			NS_DS_DATA = util.Decompress(NS_DS_DATA);
-
 
 			if (!NS_DS_DATA) then
 				error("NetStream: The data failed to decompress!");
