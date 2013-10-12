@@ -1,5 +1,5 @@
 --[[
-	NetStream
+	NetStream - 1.0.1
 	http://www.revotech.org
 	
 	Copyright (c) 2012 Alexander Grist-Hucker
