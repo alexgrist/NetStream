@@ -24,18 +24,22 @@
 --]]
 
 
-local type, error, pcall, pairs, AddCSLuaFile, require, _player = type, error, pcall, pairs, AddCSLuaFile, require, player
+local type, error, pcall, pairs, AddCSLuaFile, _player = type, error, pcall, pairs, AddCSLuaFile, player;
 
-AddCSLuaFile("includes/modules/netstream.lua");
-AddCSLuaFile("includes/modules/von.lua");
-require("von");
+--[[
+	AddCSLuaFile("includes/modules/von.lua");
+	require("von");
+--]]
 
 if (!von) then
 	error("NetStream: Unable to find vON!");
 end;
 
+AddCSLuaFile();
+
 netstream = {};
-netstream.stored = {};
+
+local stored = {};
 
 -- A function to split data for a data stream.
 local function split(data)
@@ -60,7 +64,7 @@ end;
 
 -- A function to hook a data stream.
 function netstream.Hook(name, Callback)
-	netstream.stored[name] = Callback;
+	stored[name] = Callback;
 end;
 
 if (SERVER) then
@@ -124,11 +128,11 @@ if (SERVER) then
 			if (player.nsDataStreamName and player.nsDataStreamData) then
 				player.nsDataStreamData = NS_DS_DATA;
 								
-				if (netstream.stored[player.nsDataStreamName]) then
+				if (stored[player.nsDataStreamName]) then
 					local bStatus, value = pcall(von.deserialize, player.nsDataStreamData);
 					
 					if (bStatus) then
-						netstream.stored[player.nsDataStreamName](player, value.data);
+						stored[player.nsDataStreamName](player, value.data);
 					else
 						ErrorNoHalt("NetStream: '"..NS_DS_NAME.."'\n"..value.."\n");
 					end;
@@ -171,11 +175,11 @@ else
 				return;
 			end;
 						
-			if (netstream.stored[NS_DS_NAME]) then
+			if (stored[NS_DS_NAME]) then
 				local bStatus, value = pcall(von.deserialize, NS_DS_DATA);
 			
 				if (bStatus) then
-					netstream.stored[NS_DS_NAME](value.data);
+					stored[NS_DS_NAME](value.data);
 				else
 					ErrorNoHalt("NetStream: '"..NS_DS_NAME.."'\n"..value.."\n");
 				end;
