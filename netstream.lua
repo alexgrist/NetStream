@@ -20,7 +20,7 @@
 	
 	Credits to:
 		Alexandru-Mihai Maftei aka Vercas for vON.
-		https://dl.dropbox.com/u/1217587/GMod/Lua/von%20for%20GMOD.lua
+		https://github.com/vercas/vON
 --]]
 
 
