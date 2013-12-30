@@ -81,7 +81,7 @@ if (SERVER) then
 			end;
 		end;
 		
-		local dataTable = {data = data};
+		local dataTable = {data = (data or 0)};
 		local vonData = von.serialize(dataTable);
 		local encodedData = util.Compress(vonData);
 			
@@ -134,7 +134,7 @@ if (SERVER) then
 else
 	-- A function to start a net stream.
 	function netstream.Start(name, data)
-		local dataTable = {data = data};
+		local dataTable = {data = (data or 0)};
 		local vonData = von.serialize(dataTable);
 		local encodedData = util.Compress(vonData);
 		
