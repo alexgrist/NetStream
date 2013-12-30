@@ -103,7 +103,7 @@ if (SERVER) then
 			NS_DS_DATA = util.Decompress(NS_DS_DATA);
 			
 			if (!NS_DS_DATA) then
-				error("NetStream: The data failed to decompress!");
+				error("NetStream: The data failed to decompress for "..NS_DS_NAME.."!");
 				
 				return;
 			end;
@@ -156,7 +156,7 @@ else
 			NS_DS_DATA = util.Decompress(NS_DS_DATA);
 
 			if (!NS_DS_DATA) then
-				error("NetStream: The data failed to decompress!");
+				error("NetStream: The data failed to decompress for "..NS_DS_NAME.."!");
 				
 				return;
 			end;
