@@ -148,9 +148,9 @@ else
 	end;
 	
 	net.Receive("NetStreamDS", function(length)
-		NS_DS_NAME = net.ReadString();
-		NS_DS_LENGTH = net.ReadUInt(32);
-		NS_DS_DATA = net.ReadData(NS_DS_LENGTH);
+		local NS_DS_NAME = net.ReadString();
+		local NS_DS_LENGTH = net.ReadUInt(32);
+		local NS_DS_DATA = net.ReadData(NS_DS_LENGTH);
 		
 		if (NS_DS_NAME and NS_DS_DATA and NS_DS_LENGTH) then
 			NS_DS_DATA = util.Decompress(NS_DS_DATA);
