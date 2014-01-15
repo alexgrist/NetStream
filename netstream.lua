@@ -1,5 +1,5 @@
 --[[
-	NetStream - 1.0.1
+	NetStream - 1.0.2
 
 	Alexander Grist-Hucker
 	http://www.revotech.org
