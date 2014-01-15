@@ -83,13 +83,12 @@ if (SERVER) then
 		
 		local dataTable = {data = (data or 0)};
 		local vonData = von.serialize(dataTable);
-		local encodedData = util.Compress(vonData);
 			
-		if (encodedData and #encodedData > 0 and bShouldSend) then
+		if (vonData and #vonData > 0 and bShouldSend) then
 			net.Start("NetStreamDS");
 				net.WriteString(name);
-				net.WriteUInt(#encodedData, 32);
-				net.WriteData(encodedData, #encodedData);
+				net.WriteUInt(#vonData, 32);
+				net.WriteData(vonData, #vonData);
 			net.Send(recipients);
 		end;
 	end;
@@ -100,14 +99,6 @@ if (SERVER) then
 		local NS_DS_DATA = net.ReadData(NS_DS_LENGTH);
 		
 		if (NS_DS_NAME and NS_DS_DATA and NS_DS_LENGTH) then
-			NS_DS_DATA = util.Decompress(NS_DS_DATA);
-			
-			if (!NS_DS_DATA) then
-				error("NetStream: The data failed to decompress for "..NS_DS_NAME.."!");
-				
-				return;
-			end;
-			
 			player.nsDataStreamName = NS_DS_NAME;
 			player.nsDataStreamData = "";
 			
@@ -136,13 +127,12 @@ else
 	function netstream.Start(name, data)
 		local dataTable = {data = (data or 0)};
 		local vonData = von.serialize(dataTable);
-		local encodedData = util.Compress(vonData);
 		
-		if (encodedData and #encodedData > 0) then
+		if (vonData and #vonData > 0) then
 			net.Start("NetStreamDS");
 				net.WriteString(name);
-				net.WriteUInt(#encodedData, 32);
-				net.WriteData(encodedData, #encodedData);
+				net.WriteUInt(#vonData, 32);
+				net.WriteData(vonData, #vonData);
 			net.SendToServer();
 		end;
 	end;
@@ -153,14 +143,6 @@ else
 		local NS_DS_DATA = net.ReadData(NS_DS_LENGTH);
 		
 		if (NS_DS_NAME and NS_DS_DATA and NS_DS_LENGTH) then
-			NS_DS_DATA = util.Decompress(NS_DS_DATA);
-
-			if (!NS_DS_DATA) then
-				error("NetStream: The data failed to decompress for "..NS_DS_NAME.."!");
-				
-				return;
-			end;
-						
 			if (stored[NS_DS_NAME]) then
 				local bStatus, value = pcall(von.deserialize, NS_DS_DATA);
 			
