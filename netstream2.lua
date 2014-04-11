@@ -5,20 +5,15 @@
 	http://www.revotech.org
 	
 	Credits to:
-		Alexandru-Mihai Maftei aka Vercas for vON.
-		https://github.com/vercas/vON
+		thelastpenguin for pON.
+		https://github.com/thelastpenguin/gLUA-Library/tree/master/pON
 --]]
 
 
-local type, error, pcall, pairs, AddCSLuaFile, _player = type, error, pcall, pairs, AddCSLuaFile, player;
+local type, error, pcall, pairs,  _player = type, error, pcall, pairs, player;
 
---[[
-	AddCSLuaFile("includes/modules/von.lua");
-	require("von");
---]]
-
-if (!von) then
-	error("NetStream: Unable to find vON!");
+if (!pon) then
+	error("NetStream: Unable to find pON!");
 end;
 
 AddCSLuaFile();
@@ -82,13 +77,13 @@ if (SERVER) then
 		end;
 		
 		local dataTable = {...};
-		local vonData = von.serialize(dataTable);
+		local encodedData = pon.encode(dataTable);
 			
-		if (vonData and #vonData > 0 and bShouldSend) then
+		if (encodedData and #encodedData > 0 and bShouldSend) then
 			net.Start("NetStreamDS");
 				net.WriteString(name);
-				net.WriteUInt(#vonData, 32);
-				net.WriteData(vonData, #vonData);
+				net.WriteUInt(#encodedData, 32);
+				net.WriteData(encodedData, #encodedData);
 			net.Send(recipients);
 		end;
 	end;
@@ -106,7 +101,7 @@ if (SERVER) then
 				player.nsDataStreamData = NS_DS_DATA;
 								
 				if (stored[player.nsDataStreamName]) then
-					local bStatus, value = pcall(von.deserialize, player.nsDataStreamData);
+					local bStatus, value = pcall(pon.decode, player.nsDataStreamData);
 					
 					if (bStatus) then
 						stored[player.nsDataStreamName](player, unpack(value));
@@ -126,13 +121,13 @@ else
 	-- A function to start a net stream.
 	function netstream.Start(name, ...)
 		local dataTable = {...};
-		local vonData = von.serialize(dataTable);
+		local encodedData = pon.encode(dataTable);
 		
-		if (vonData and #vonData > 0) then
+		if (encodedData and #encodedData > 0) then
 			net.Start("NetStreamDS");
 				net.WriteString(name);
-				net.WriteUInt(#vonData, 32);
-				net.WriteData(vonData, #vonData);
+				net.WriteUInt(#encodedData, 32);
+				net.WriteData(encodedData, #encodedData);
 			net.SendToServer();
 		end;
 	end;
@@ -144,7 +139,7 @@ else
 		
 		if (NS_DS_NAME and NS_DS_DATA and NS_DS_LENGTH) then
 			if (stored[NS_DS_NAME]) then
-				local bStatus, value = pcall(von.deserialize, NS_DS_DATA);
+				local bStatus, value = pcall(pon.decode, NS_DS_DATA);
 			
 				if (bStatus) then
 					stored[NS_DS_NAME](unpack(value));
