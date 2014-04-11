@@ -28,7 +28,7 @@ netstream = {};
 local stored = {};
 
 -- A function to split data for a data stream.
-local function split(data)
+function netstream.Split(data)
 	local index = 1;
 	local result = {};
 	local buffer = {};
