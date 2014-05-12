@@ -10,7 +10,7 @@
 --]]
 
 
-local type, error, pcall, pairs,  _player = type, error, pcall, pairs, player;
+local type, error, pcall, pairs, _player = type, error, pcall, pairs, player;
 
 if (!pon) then
 	error("NetStream: Unable to find pON!");
@@ -18,9 +18,8 @@ end;
 
 AddCSLuaFile();
 
-netstream = {};
-
-local stored = {};
+netstream = netstream or {};
+netstream.stored = netstream.stored or {};
 
 -- A function to split data for a data stream.
 function netstream.Split(data)
@@ -45,7 +44,7 @@ end;
 
 -- A function to hook a data stream.
 function netstream.Hook(name, Callback)
-	stored[name] = Callback;
+	netstream.stored[name] = Callback;
 end;
 
 if (SERVER) then
@@ -100,11 +99,11 @@ if (SERVER) then
 			if (player.nsDataStreamName and player.nsDataStreamData) then
 				player.nsDataStreamData = NS_DS_DATA;
 								
-				if (stored[player.nsDataStreamName]) then
+				if (netstream.stored[player.nsDataStreamName]) then
 					local bStatus, value = pcall(pon.decode, player.nsDataStreamData);
 					
 					if (bStatus) then
-						stored[player.nsDataStreamName](player, unpack(value));
+						netstream.stored[player.nsDataStreamName](player, unpack(value));
 					else
 						ErrorNoHalt("NetStream: '"..NS_DS_NAME.."'\n"..value.."\n");
 					end;
@@ -138,11 +137,11 @@ else
 		local NS_DS_DATA = net.ReadData(NS_DS_LENGTH);
 		
 		if (NS_DS_NAME and NS_DS_DATA and NS_DS_LENGTH) then
-			if (stored[NS_DS_NAME]) then
+			if (netstream.stored[NS_DS_NAME]) then
 				local bStatus, value = pcall(pon.decode, NS_DS_DATA);
 			
 				if (bStatus) then
-					stored[NS_DS_NAME](unpack(value));
+					netstream.stored[NS_DS_NAME](unpack(value));
 				else
 					ErrorNoHalt("NetStream: '"..NS_DS_NAME.."'\n"..value.."\n");
 				end;
