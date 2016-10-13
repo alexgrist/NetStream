@@ -47,12 +47,7 @@ function netstream.Split(data)
 	return result;
 end;
 
---[[
-	@codebase Shared
-	@details A function to hook a data stream.
-	@param String A unique identifier.
-	@param Function The datastream callback.
---]]
+-- A function to hook a net stream.
 function netstream.Hook(name, Callback)
 	stored[name] = Callback;
 end;
@@ -219,7 +214,7 @@ else
 		end;
 	end;
 
-	-- A function to start a net stream.
+	-- A function to start a >64KB net stream.
 	function netstream.Heavy(name, ...)
 		local dataTable = {...};
 		local encodedData = pon.encode(dataTable);
