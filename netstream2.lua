@@ -192,6 +192,7 @@ if (SERVER) then
 						end;
 					end;
 
+					cache[player.nsDataStreamName] = nil;
 					player.nsDataStreamName = nil;
 					player.nsDataStreamData = nil;
 				end;
