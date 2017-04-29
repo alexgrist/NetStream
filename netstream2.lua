@@ -61,8 +61,8 @@ if (SERVER) then
 		local recipients = {};
 		local bShouldSend = false;
 
-		if (type(player) != "table") then
-			if (!player) then
+		if (!istable(player)) then
+			if (!IsValid(player)) then
 				player = _player.GetAll();
 			else
 				player = {player};
@@ -93,8 +93,8 @@ if (SERVER) then
 		local recipients = {};
 		local bShouldSend = false;
 
-		if (type(player) != "table") then
-			if (!player) then
+		if (!istable(player)) then
+			if (!IsValid(player)) then
 				player = _player.GetAll();
 			else
 				player = {player};
